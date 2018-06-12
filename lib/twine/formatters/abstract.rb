@@ -3,8 +3,6 @@ require 'fileutils'
 module Twine
   module Formatters
     class Abstract
-      LANGUAGE_CODE_WITH_OPTIONAL_REGION_CODE = "[a-z]{2}(?:-[A-Za-z]{2})?"
-
       attr_accessor :twine_file
       attr_accessor :options
 
@@ -78,12 +76,7 @@ module Twine
       end
 
       def determine_language_given_path(path)
-        only_language_and_region = /^#{LANGUAGE_CODE_WITH_OPTIONAL_REGION_CODE}$/i
-        basename = File.basename(path, File.extname(path))
-        return basename if basename =~ only_language_and_region
-        return basename if @twine_file.language_codes.include? basename
-        
-        path.split(File::SEPARATOR).reverse.find { |segment| segment =~ only_language_and_region }
+        raise NotImplementedError.new("You must implement determine_language_given_path in your formatter class.")
       end
 
       def output_path_for_language(lang)
